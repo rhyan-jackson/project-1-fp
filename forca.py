@@ -5,6 +5,76 @@ from time import sleep
 
 letters_tuple = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' , 'Ç')
 
+cartoon_list = [
+    """
+    _____
+    |   |
+    |   
+    |  
+    |
+    |_______ 
+    """,
+    """
+    _____
+    |   |
+    |   O
+    | 
+    |
+    |_______
+    """,
+    """
+    _____
+    |   |
+    |   O
+    |   |
+    |
+    |_______
+    """,
+    """
+    _____
+    |   |
+    |   O
+    |  /|
+    |
+    |_______
+    """,
+    """
+    _____
+    |   |
+    |   O
+    |  /|\\
+    |
+    |_______
+    """,
+    """
+    _____
+    |   |
+    |   O
+    |  /|\\
+    |  /
+    |_______
+    """,
+    """
+    _____
+    |   |
+    |   O
+    |  /|\\
+    |  / \\
+    |_______
+    """
+]
+
+class Man: # Hangman Man object, it will change and print the man during the game.
+    def __init__(self, cartoon_list):
+        self.phase = 0
+        self.cartoon_list = cartoon_list
+    
+    def print(self):
+        print(self.cartoon_list[self.phase])
+    
+    
+    def increase_phase(self):
+        self.phase += 1
 
 def color(id, msg): # Return an coloured message
     return f'\033[{id}m{msg}\033[m'
@@ -28,24 +98,45 @@ def search_letter_pos(letter_try, word):
             positions.append(pos)
     return positions # Return a list with the positions of the letters in a word, if empty, the letter_try not in word
 
-def menu(dynamic_list_menu, wrong_letters_menu, try_number_menu):
+def menu(dynamic_list_menu, wrong_letters_menu, try_number_menu, man): # This is how the game will be displayed in the script.
         clear_terminal()
+        man.print()
         print(''.join(dynamic_list_menu))
         print(f"Wrong: {'-'.join(wrong_letters_menu)}")
         print(f"Try number: {try_number_menu}")
     
+def welcome_animation():
+    import sys
+    from hangman_string import hangman_string
 
+    codes = (0, 3)
+    pos = 0
+    for x,i in enumerate(hangman_string):
+        if x % 7 == 0:
+            if pos > len(codes) - 1:
+                pos = 0
+            print(f'\033[3{codes[pos]}m', end='')
+            pos += 1
+        sys.stdout.flush()
+        print(i, end='')
+        sleep(0.002)
+    sleep(5)
+    print('\033[m')
 def play(word): # Play function, it starts the game.
     # Defining the variables:
-    word = clean_string(word)
+    word = clean_string(word) #
+    man = Man(cartoon_list=cartoon_list) # Defining the Hangman.
     dynamic_list = ['_' for i in range(len(word))] # Setting up the dynamic list, it will change and help to print the result in every game part.
     try_number = 0
     wrong_letters = []
     # original_word = ...
-    print('Word:', word)
+    #print('Word:', word)
     sleep(3)
+    
+    welcome_animation()
+    
     while True:
-        menu(dynamic_list, wrong_letters, try_number)
+        menu(dynamic_list, wrong_letters, try_number, man) # Calling the menu.
         while True: # Input treatment, minimizing future output problems. 
             letter_try = clean_string(input('Try an letter > '))
             if len(letter_try) == 1 and letter_try in letters_tuple: # Verifying if it's really a unique and valid letter.
@@ -55,16 +146,22 @@ def play(word): # Play function, it starts the game.
                 
         positions_list = search_letter_pos(letter_try, word) # The list of the positions that the letter is in the word
         
-        try_number += 1
-        
-        if len(positions_list) != 0: # Verify if the player got an word letter.
-            for p in positions_list: # True: Looping to update dynamic_list
-                dynamic_list[p] = letter_try
+        if letter_try in dynamic_list or letter_try in wrong_letters:
+            print(color(31, 'Youve already tried this.'))
+            sleep(2)
         else:
-            wrong_letters.append(letter_try) #False: append in wrong_letters list
-            
+            if len(positions_list) != 0: # Verify if the player got an word letter.
+                    for p in positions_list: # True: Looping to update dynamic_list
+                        dynamic_list[p] = letter_try
+            else:
+                wrong_letters.append(letter_try) #False: append in wrong_letters list
+                man.increase_phase() # Increase the man's phase.
+            try_number += 1
         if dynamic_list.count('_') == 0: # Stopping the game if the player already did all letters.
             print(f'You won! The word is {word}!')
+            break
+        elif len(wrong_letters) > 5:
+            print(f'YOU LOSE! Thw word was {word}.')
             break
                     
         
@@ -81,9 +178,7 @@ def main():
    
     # Escolhe palavra aleatoriamente
     secret = choose_random_word(words)
-    play('Rhyan')
+    play('trufinha')
 
 
-if __name__ == "__main__":
-    main()
-
+main()
