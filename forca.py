@@ -163,22 +163,116 @@ def play(word): # Play function, it starts the game.
         elif len(wrong_letters) > 5:
             print(f'YOU LOSE! Thw word was {word}.')
             break
-                    
-        
-        
-        
-            
-def main():
-    from wordlist import words1, words2
+       
+       
+def keep_playing():
+    print('Do you want to keep playing?')
+    print('1 - Continue')
+    print('2 - Change difficulty')
+    print('3 - Exit')
+    x = 0
+    while (x < 1 or x > 3):
+        x = int(input(''))
+    if x < 1:
+        print('Invalid option. Please pick an option above.') 
+    elif x == 1:
+        return 1
+    elif x == 2:
+        return 2
+    elif x == 3:
+        print('Thanks for playing our game!')
+        return 3
+    elif x > 3:
+        print('Invalid option. Please pick an option above.')
     
+    
+                 
+'''
+def wordlist_words():
+    from wordlist import words1, words2
+
     # Descomente a linha que interessar para testar
-    words = words1              # palavras sem acentos nem cedilhas.
-    #words = words2             # palavras com acentos ou cedilhas.
-    #words = words1 + words2    # palavras de ambos os tipos
+    words_easy = words1              # palavras sem acentos nem cedilhas.
+    words_medium = words2            # palavras com acentos ou cedilhas.
+    words_hard = words1 + words2     # palavras de ambos os tipos
+''' 
+
+'''        
+def main():
+    # Descomente a linha que interessar para testar
+    words_easy = words1               # palavras sem acentos nem cedilhas.
+    words_medium = words2             # palavras com acentos ou cedilhas.
+    words_hard = words1 + words2      # palavras de ambos os tipos
    
     # Escolhe palavra aleatoriamente
-    secret = choose_random_word(words)
-    play('trufinha')
-
+    secret = choose_random_word(words_easy)
+    play(secret)
 
 main()
+'''
+'''
+wordlist_words()
+'''
+from wordlist import words1, words2
+words_easy = words1               # palavras sem acentos nem cedilhas.
+words_medium = words2             # palavras com acentos ou cedilhas.
+words_hard = words1 + words2      # palavras de ambos os tipos
+
+option = 0
+welcome_animation()
+while (option != 4) :
+    print('|----------------------------------------------------------------------------------------------------------------------------------------------------|')
+    print('|                                                 Welcome to HangMan Game! Choose your difficulty:                                                   |')
+    print('|                                                                     1 - Easy                                                                       |')
+    print('|                                                                     2 - Medium                                                                     |')
+    print('|                                                                     3 - Hard                                                                       |')
+    print('|                                                                     4 - Quit Game                                                                  |')
+    print('|----------------------------------------------------------------------------------------------------------------------------------------------------|')
+    option1 = int(input(''))
+    option2 = 0
+    
+    if option1 <= 0:
+        print('Invalid option. Please pick an option above.')
+        continue
+    elif option1 == 1:
+        secret = choose_random_word(words_easy)
+        play(secret)
+        option2 = keep_playing()
+        if option2 == 1:
+            play(secret)
+        elif option2 == 2:
+            welcome_animation()
+            continue
+        elif option2 == 3:
+            break
+        
+    elif option1 == 2:
+        secret = choose_random_word(words_medium)
+        play(secret)
+        option2 = keep_playing()
+        if option2 == 1:
+            play(secret)
+        elif option2 == 2:
+            welcome_animation()
+            continue
+        elif option2 == 3:
+            break
+        
+    elif option1 == 3:
+        secret = choose_random_word(words_hard)
+        play(secret)
+        option2 = keep_playing()
+        if option2 == 1:
+            play(secret)
+        elif option2 == 2:
+            welcome_animation()
+            continue
+        elif option2 == 3:
+            break
+    elif option1 == 4:
+        print('Thanks for playing our game!')
+        break
+    elif option1 >= 5:
+        print('Invalid option. Please pick an option above.')
+        continue
+    
