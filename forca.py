@@ -5,6 +5,7 @@ AUTORES = [120495, 115372]
 # pip install unidecode
 
 from time import sleep
+import sys
 
 letters_tuple = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' , 'Ç')
 
@@ -197,47 +198,6 @@ def word_choose_by_difficulty(difficulty=0):
         return (0, 0)
     return word, difficulty
     
-        # elif option1 == 1:
-        #     secret = choose_random_word(words_easy)
-        #     play(secret)
-        #     option2 = try_again()
-        #     if option2 == 1:
-        #         play(secret)
-        #     elif option2 == 2:
-        #         title_static()
-        #     elif option2 == 3:
-        #         break
-            
-        # elif option1 == 2:
-        #     secret = choose_random_word(words_medium)
-        #     play(secret)
-        #     option2 = try_again()
-        #     if option2 == 1:
-        #         play(secret)
-        #     elif option2 == 2:
-        #         title_static()
-                
-        #     elif option2 == 3:
-        #         break
-            
-        # elif option1 == 3:
-        #     secret = choose_random_word(words_hard)
-        #     play(secret)
-        #     option2 = try_again()
-        #     if option2 == 1:
-        #         play(secret)
-        #     elif option2 == 2:
-        #         title_static()
-        #     elif option2 == 3:
-        #         break
-        # elif option1 == 4:
-        #     print('Thanks for playing our game!')
-        #     break
-        # elif option1 >= 5:
-        #     print('Invalid option. Please pick an option above.')
-    
-
-    
 def play(word): # Play function, it starts the game.
     # Defining the variables:
     word = clean_string(word)
@@ -281,6 +241,25 @@ def play(word): # Play function, it starts the game.
             clear_terminal()
             title_static()
             print(f'You lose!')
+            if len(sys.argv) > 1:
+                while True:
+                    print(
+            '''
+            Do you want to reveal the last played word?
+                        
+            (1) > Yes
+            (2) > No
+                            
+            '''
+                    )
+                    try: answer = int(input('Input > '))
+                    except ValueError: print('Invalid option. Please pick one above.'); sleep(2); clear_terminal(); title_static()
+                    else:
+                        if answer in (1, 2):
+                            break
+                        else: print('Invalid option. Please pick one above.'); sleep(2); clear_terminal(); title_static()
+            if answer == 1:
+                print(f'The word was: {word}')
             break 
                  
 '''
@@ -310,34 +289,40 @@ main()
 wordlist_words()
 '''
 def main():
-    static = False
-    while True:
-    # Welcome Animation
-        clear_terminal()
-        welcome(static)
-        static = True
-    # Pergunta dificuldade
-        word, difficulty = word_choose_by_difficulty()
-        if (word, difficulty) == (0, 0):
-            break
-    # Play com dificuldade
-        word = 'rhyan'
+    if len(sys.argv) > 1:
+        words = sys.argv[1:]
+        word = choose_random_word(words)
+        welcome()
         play(word)
-        # print('play', word)
-    # Menu: Repetir, Nova palavra mesma dificuldade, Mesma palavra, Sair.
+    else:
+        static = False
         while True:
-            option_try_again = try_again()
-            if option_try_again == 1:
-                play(word)
-            elif option_try_again == 2:
-                word, difficulty = word_choose_by_difficulty(difficulty)
-                play(word)
-            elif option_try_again == 3:
+        # Welcome Animation
+            clear_terminal()
+            welcome(static)
+            static = True
+        # Pergunta dificuldade
+            word, difficulty = word_choose_by_difficulty()
+            if (word, difficulty) == (0, 0):
                 break
-            elif option_try_again == 4:
-                print(word)
-            elif option_try_again == 0:
-                break
-        if option_try_again == 0: break
+        # Play com dificuldade
+            word = 'rhyan'
+            play(word)
+            # print('play', word)
+        # Menu: Repetir, Nova palavra mesma dificuldade, Mesma palavra, Sair.
+            while True:
+                option_try_again = try_again()
+                if option_try_again == 1:
+                    play(word)
+                elif option_try_again == 2:
+                    word, difficulty = word_choose_by_difficulty(difficulty)
+                    play(word)
+                elif option_try_again == 3:
+                    break
+                elif option_try_again == 4:
+                    print(word)
+                elif option_try_again == 0:
+                    break
+            if option_try_again == 0: break
 
 main()
