@@ -6,6 +6,7 @@ AUTORES = [120495, 115372]
 
 from time import sleep
 import sys
+from unidecode import unidecode
 
 letters_tuple = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' , 'Ç')
 
@@ -201,11 +202,12 @@ def word_choose_by_difficulty(difficulty=0):
 def play(word): # Play function, it starts the game.
     # Defining the variables:
     word = clean_string(word)
+    no_accent_word = unidecode(word)
     man = Man(cartoon_list=cartoon_list) # Defining the Hangman.
     dynamic_list = ['_' for i in range(len(word))] # Setting up the dynamic list, it will change and help to print the result in every game part.
     try_number = 0
     wrong_letters = []
-    # original_word = ...
+    original_word = [x for x in word]
     #print('Word:', word)
     
     while True: # Calling the menu.
@@ -219,7 +221,7 @@ def play(word): # Play function, it starts the game.
                 sleep(1.2)
                 clear_terminal()
                 
-        positions_list = search_letter_pos(letter_try, word) # The list of the positions that the letter is in the word
+        positions_list = search_letter_pos(letter_try, no_accent_word) # The list of the positions that the letter is in the word
         
         if letter_try in dynamic_list or letter_try in wrong_letters:
             print(color(31, 'You\'ve already tried this.'))
@@ -227,7 +229,7 @@ def play(word): # Play function, it starts the game.
         else:
             if len(positions_list) != 0: # Verify if the player got an word letter.
                     for p in positions_list: # True: Looping to update dynamic_list
-                        dynamic_list[p] = letter_try
+                        dynamic_list[p] = original_word[p]
             else:
                 wrong_letters.append(letter_try) #False: append in wrong_letters list
                 man.increase_phase() # Increase the man's phase.
@@ -235,12 +237,12 @@ def play(word): # Play function, it starts the game.
         if dynamic_list.count('_') == 0: # Stopping the game if the player already did all letters.
             clear_terminal()
             title_static()
-            print(f'You won!')
+            print(color(33, f'You won!'))
             break
         elif len(wrong_letters) > 5:
             clear_terminal()
             title_static()
-            print(f'You lose!')
+            print(color(31, f'You lose!'))
             if len(sys.argv) > 1:
                 while True:
                     print(
@@ -258,36 +260,11 @@ def play(word): # Play function, it starts the game.
                         if answer in (1, 2):
                             break
                         else: print('Invalid option. Please pick one above.'); sleep(2); clear_terminal(); title_static()
-            if answer == 1:
-                print(f'The word was: {word}')
+                if answer == 1:
+                    print(f'The word was: {word}')
             break 
                  
-'''
-def wordlist_words():
-    from wordlist import words1, words2
-
-    # Descomente a linha que interessar para testar
-    words_easy = words1              # palavras sem acentos nem cedilhas.
-    words_medium = words2            # palavras com acentos ou cedilhas.
-    words_hard = words1 + words2     # palavras de ambos os tipos
-''' 
-
-'''        
-def main():
-    # Descomente a linha que interessar para testar
-    words_easy = words1               # palavras sem acentos nem cedilhas.
-    words_medium = words2             # palavras com acentos ou cedilhas.
-    words_hard = words1 + words2      # palavras de ambos os tipos
-   
-    # Escolhe palavra aleatoriamente
-    secret = choose_random_word(words_easy)
-    play(secret)
-
-main()
-'''
-'''
-wordlist_words()
-'''
+                 
 def main():
     if len(sys.argv) > 1:
         words = sys.argv[1:]
@@ -305,10 +282,8 @@ def main():
             word, difficulty = word_choose_by_difficulty()
             if (word, difficulty) == (0, 0):
                 break
-        # Play com dificuldade
-            word = 'rhyan'
+        # Play com dificuldade         
             play(word)
-            # print('play', word)
         # Menu: Repetir, Nova palavra mesma dificuldade, Mesma palavra, Sair.
             while True:
                 option_try_again = try_again()
@@ -326,3 +301,6 @@ def main():
             if option_try_again == 0: break
 
 main()
+clear_terminal(); title_static()
+print("Thank you for playing!")
+sleep(2)
