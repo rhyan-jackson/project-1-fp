@@ -264,7 +264,7 @@ def play(word): # Play function, it starts the game.
             break 
                  
                  
-def main(): # The main function. 
+def main(): # The main function. It's the "cerebrus" of the game.
     if len(sys.argv) > 1:
         words = sys.argv[1:]
         word = choose_random_word(words)
