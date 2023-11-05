@@ -4,7 +4,7 @@ AUTORES = [120495, 115372]
 # MÓDULOS EXTRA: unidecode
 # pip install unidecode
 
-from time import sleep
+from time import sleep          # Imports sleep module used to suspend the execution for the given seconds.
 import sys
 from unidecode import unidecode
 
@@ -81,20 +81,19 @@ class Man: # Hangman Man object, it will change and print the man during the gam
     def increase_phase(self):
         self.phase += 1
 
-def color(id, msg): # Return an coloured message
+def color(id, msg): # Changes the color of a message and returns it.
     return f'\033[{id}m{msg}\033[m'
 
 def clear_terminal(): # Clear the terminal
     import os
     os.system('clear')
 
-def choose_random_word(options): # Choose a random word from an given list.
+def choose_random_word(options): # Choose a random word from a given list.
     import random
     return random.choice(options).upper()
 
 def clean_string(inp): # Clean spaces and put input in UPPER case.
     return inp.upper().replace(' ', '')
-    # IMPLEMENTAR TRANSFORMAR ACENTOS EM LETRAS NORMAIS
 
 def search_letter_pos(letter_try, word):
     positions = [] # Creates the list of the positions that the letter is present in word
@@ -103,7 +102,7 @@ def search_letter_pos(letter_try, word):
             positions.append(pos)
     return positions # Return a list with the positions of the letters in a word, if empty, the letter_try not in word
 
-def menu(dynamic_list_menu, wrong_letters_menu, try_number_menu, man): # This is how the game will be displayed in the script.
+def menu(dynamic_list_menu, wrong_letters_menu, try_number_menu, man): # The Menu. This is how the game will be displayed in the script.
         clear_terminal()
         title_static()
         man.print()
@@ -111,7 +110,7 @@ def menu(dynamic_list_menu, wrong_letters_menu, try_number_menu, man): # This is
         print(f"Wrong: {'-'.join(wrong_letters_menu)}")
         print(f"Try number: {try_number_menu}")
     
-def welcome(static=False): # This is the function that does the animation in the terminal (visual feature, not much to explain about)
+def welcome(static=False): # This is the function that does the animation in the terminal (visual feature, not much to explain about). It uses the string with characters from the Extended ASCII Table from the file 'hangman_string.py' and prints it to the terminal.
     if not static:
         import sys
         from hangman_string import hangman_string
@@ -132,7 +131,7 @@ def welcome(static=False): # This is the function that does the animation in the
     else:
         title_static()
         
-def title_static(): # This function returns an static version of welcome_animation()
+def title_static(): # This function returns a static version of welcome_animation()
     from hangman_string import hangman_string_static
     print(hangman_string_static)
 
@@ -162,11 +161,11 @@ def try_again(): # Function used to do the "try again"'s after every game finish
                 print('Invalid option. Please pick one above.'); sleep(2); clear_terminal(); title_static()
             
         
-def word_choose_by_difficulty(difficulty=0):
+def word_choose_by_difficulty(difficulty=0): # Function to choose the "difficulty" of the game. It imports the strings from the file 'wordlist.py'.
     from wordlist import words1, words2
-    words_easy = words1               # palavras sem acentos nem cedilhas.
-    words_medium = words2             # palavras com acentos ou cedilhas.
-    words_hard = words1 + words2      # palavras de ambos os tipos
+    words_easy = words1               # No accented words.
+    words_medium = words2             # Accented words.
+    words_hard = words1 + words2      # Both.
     
     while not difficulty in range(1, 5):
         difficulty = None
@@ -265,7 +264,7 @@ def play(word): # Play function, it starts the game.
             break 
                  
                  
-def main():
+def main(): # The main function. It's the "cerebrus" of the game.
     if len(sys.argv) > 1:
         words = sys.argv[1:]
         word = choose_random_word(words)
@@ -278,13 +277,13 @@ def main():
             clear_terminal()
             welcome(static)
             static = True
-        # Pergunta dificuldade
+        # Menu to choose difficulties
             word, difficulty = word_choose_by_difficulty()
             if (word, difficulty) == (0, 0):
                 break
-        # Play com dificuldade         
+        # Game itself        
             play(word)
-        # Menu: Repetir, Nova palavra mesma dificuldade, Mesma palavra, Sair.
+        # After Game Menu: Repeat, New word with same difficulty, Change difficulty, Reveal the word, Exit.
             while True:
                 option_try_again = try_again()
                 if option_try_again == 1:
