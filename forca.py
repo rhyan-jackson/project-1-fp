@@ -4,9 +4,11 @@ AUTORES = [120495, 115372]
 # MÓDULOS EXTRA: unidecode
 # pip install unidecode
 
-from time import sleep          # Imports sleep module used to suspend the execution for the given seconds.
-import sys
-from unidecode import unidecode
+from time import sleep # Imports sleep module used to suspend the execution for the given seconds.
+import sys # This helps cleaning and updating the terminal.
+from unidecode import unidecode # Unidecode is used for transforming words with accent in base words.
+from hangman_string import * # Imports some strings.
+from wordlist import words1, words2 # Imports the wordlists given.
 
 letters_tuple = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' , 'Ç', 'À', 'È', 'Ì', 'Ò', 'Ù', 'Á', 'É', 'Í', 'Ó', 'Ú', 'Ý', 'Â', 'Ê', 'Î', 'Ô', 'Û', 'Ã', 'Õ')
 
@@ -112,9 +114,6 @@ def menu(dynamic_list_menu, wrong_letters_menu, try_number_menu, man): # The Men
     
 def welcome(static=False): # This is the function that does the animation in the terminal (visual feature, not much to explain about). It uses the string with characters from the Extended ASCII Table from the file 'hangman_string.py' and prints it to the terminal.
     if not static:
-        import sys
-        from hangman_string import hangman_string
-
         codes = (7, 3)
         pos = 0
         for x,i in enumerate(hangman_string):
@@ -132,12 +131,11 @@ def welcome(static=False): # This is the function that does the animation in the
         title_static()
         
 def title_static(): # This function returns a static version of welcome_animation()
-    from hangman_string import hangman_string_static
     print(hangman_string_static)
 
 def try_again(): # Function used to do the "try again"'s after every game finish.
     option = None
-    while not option in range(1, 6):
+    while not option in range(1, 6): # Menu of try again
         option = None
         print(
             '''
@@ -151,7 +149,7 @@ def try_again(): # Function used to do the "try again"'s after every game finish
             '''
         )
         
-        try: option = int(input('Input > '))
+        try: option = int(input('Input > ')) # This type of treatment is common in the input's parts, it helps to treat the user input with accuracy.
         except ValueError: print('Invalid option. Please pick one above.'); sleep(2); clear_terminal(); title_static()
         else:
             if option in range(1, 6):
@@ -162,12 +160,11 @@ def try_again(): # Function used to do the "try again"'s after every game finish
             
         
 def word_choose_by_difficulty(difficulty=0): # Function to choose the "difficulty" of the game. It imports the strings from the file 'wordlist.py'.
-    from wordlist import words1, words2
     words_easy = words1               # No accented words.
     words_medium = words2             # Accented words.
     words_hard = words1 + words2      # Both.
     
-    while not difficulty in range(1, 5):
+    while not difficulty in range(1, 5): # Difficulty selection menu.
         difficulty = None
         clear_terminal()
         title_static()
@@ -182,7 +179,7 @@ def word_choose_by_difficulty(difficulty=0): # Function to choose the "difficult
             
             '''
         )
-        try: difficulty = int(input('Input > '))
+        try: difficulty = int(input('Input > ')) # The same treatment of try_again() function.
         except ValueError: print('Invalid option. Please pick one above.'); sleep(2); clear_terminal(); title_static()
         else:
             if difficulty in range(1, 5):
@@ -202,7 +199,7 @@ def play(word): # Play function, it starts the game.
     # Defining the variables:
     word = clean_string(word)
     no_accent_word = unidecode(word)
-    man = Man(cartoon_list=cartoon_list) # Defining the Hangman.
+    man = Man(cartoon_list=cartoon_list) # Defining the Hangman. (This is POO, search for it in google if necessary.)
     dynamic_list = ['_' for i in range(len(word))] # Setting up the dynamic list, it will change and help to print the result in every game part.
     try_number = 0
     wrong_letters = []
@@ -211,18 +208,18 @@ def play(word): # Play function, it starts the game.
     
     while True: # Calling the menu.
         while True: # Input treatment, minimizing future output problems.
-            menu(dynamic_list, wrong_letters, try_number, man) 
-            letter_try = unidecode(clean_string(input('Try an letter > ')))
+            menu(dynamic_list, wrong_letters, try_number, man) # Calls menu function, giving the parameters.
+            letter_try = unidecode(clean_string(input('Try an letter > '))) # This is the letter that the player inputs.
             if len(letter_try) == 1 and letter_try in letters_tuple: # Verifying if it's really a unique and valid letter.
                 break
             else:
-                print('Give as input an valid letter.') # "Error" message after treatment.
+                print(color(31, 'Give as input an valid letter.')) # "Error" message after treatment.
                 sleep(1.2)
                 clear_terminal()
                 
         positions_list = search_letter_pos(letter_try, no_accent_word) # The list of the positions that the letter is in the word
         
-        if letter_try in dynamic_list or letter_try in wrong_letters:
+        if letter_try in dynamic_list or letter_try in wrong_letters: # Verifying if the letter was already tried in game session.
             print(color(31, 'You\'ve already tried this.'))
             sleep(2)
         else:
@@ -284,7 +281,7 @@ def main(): # The main function. It's the "cerebrus" of the game.
         # Game itself        
             play(word)
         # After Game Menu: Repeat, New word with same difficulty, Change difficulty, Reveal the word, Exit.
-            while True:
+            while True: # Looping and executing what the player calls in the try_again() function menu.
                 option_try_again = try_again()
                 if option_try_again == 1:
                     play(word)
@@ -301,5 +298,5 @@ def main(): # The main function. It's the "cerebrus" of the game.
 
 main()
 clear_terminal(); title_static()
-print(color("Thank you for playing!", 33))
+print(color(33, "Thank you for playing!"))
 sleep(2)
