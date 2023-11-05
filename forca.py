@@ -213,7 +213,7 @@ def play(word): # Play function, it starts the game.
     while True: # Calling the menu.
         while True: # Input treatment, minimizing future output problems.
             menu(dynamic_list, wrong_letters, try_number, man) 
-            letter_try = unidecode.unidecode(clean_string(input('Try an letter > ')))
+            letter_try = unidecode(clean_string(input('Try an letter > ')))
             if len(letter_try) == 1 and letter_try in letters_tuple: # Verifying if it's really a unique and valid letter.
                 break
             else:
@@ -237,7 +237,7 @@ def play(word): # Play function, it starts the game.
         if dynamic_list.count('_') == 0: # Stopping the game if the player already did all letters.
             clear_terminal()
             title_static()
-            print(color(33, f'You won!'))
+            print(color(32, f'You won!'))
             break
         elif len(wrong_letters) > 5:
             clear_terminal()
@@ -302,5 +302,5 @@ def main():
 
 main()
 clear_terminal(); title_static()
-print("Thank you for playing!")
+print(color("Thank you for playing!", 33))
 sleep(2)
