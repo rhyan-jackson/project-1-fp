@@ -6,8 +6,9 @@ AUTORES = [120495, 115372]
 
 from time import sleep
 import sys
+import unidecode
 
-letters_tuple = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' , 'Ç')
+letters_tuple = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' , 'Ç', 'À', 'È', 'Ì', 'Ò', 'Ù', 'Á', 'É', 'Í', 'Ó', 'Ú', 'Ý', 'Â', 'Ê', 'Î', 'Ô', 'Û', 'Ã', 'Õ')
 
 cartoon_list = [
     """
@@ -211,7 +212,7 @@ def play(word): # Play function, it starts the game.
     while True: # Calling the menu.
         while True: # Input treatment, minimizing future output problems.
             menu(dynamic_list, wrong_letters, try_number, man) 
-            letter_try = clean_string(input('Try an letter > '))
+            letter_try = unidecode.unidecode(clean_string(input('Try an letter > ')))
             if len(letter_try) == 1 and letter_try in letters_tuple: # Verifying if it's really a unique and valid letter.
                 break
             else:
@@ -258,8 +259,8 @@ def play(word): # Play function, it starts the game.
                         if answer in (1, 2):
                             break
                         else: print('Invalid option. Please pick one above.'); sleep(2); clear_terminal(); title_static()
-            if answer == 1:
-                print(f'The word was: {word}')
+                if answer == 1:
+                    print(f'The word was: {word}')
             break 
                  
 '''
